@@ -20,16 +20,22 @@
       <h3>{{ mobileHeader || mobileHeaderFallback }}</h3>
     </div>
     <div class="filter-section__inner-wrapper">
-      <slot></slot>
+      <div :style="stylesSlot">
+        <slot></slot>
+      </div>
 
       <div class="filter-section__action-buttons" v-if="showActionButtons" :style="stylesFooter">
-        <button @click="closeDatepickerCancel" type="button">{{ texts.cancel }}</button>
-        <button
-          ref="apply-button"
-          @click="apply"
-          :style="{backgroundColor: colors.selected, color: '#fff', width: '150px', height: '30px'}"
-          type="button"
-        >{{ texts.apply }}</button>
+        <div class="col-xs-6">
+          <button @click="closeDatepickerCancel" type="button" id="clear-filter" v-if="showCancelButton">{{ texts.cancel }}</button>
+        </div>
+        <div class="col-xs-6" style="padding-right: 0;">
+          <button
+            ref="apply-button"
+            @click="apply"
+            :style="{backgroundColor: colors.selected, color: '#fff', width: '150px', height: '30px', float: 'right'}"
+            type="button"
+          >{{ texts.apply }}</button>
+        </div>
       </div>
     </div>
   </div>
@@ -57,13 +63,15 @@ export default {
     showActionButtons: { type: Boolean, default: true },
     type: { type: String },
     width: { type: Number, default: 300 },
-    big: { default: false }
+    big: { default: false },
+    showCancelButton: { default: true },
+    alignRight: { type: Boolean, default: false },
+    height: { default: false }
   },
   data() {
     return {
       wrapperId: 'airbnb-style-datepicker-wrapper-' + randomString(5),
       showFilter: false,
-      alignRight: false,
       triggerPosition: {},
       triggerWrapperPosition: {},
       viewportWidth: undefined,
@@ -96,7 +104,7 @@ export default {
         inRangeBorder: '#33dacd',
         disabled: '#fff',
         hoveredInRange: '#67f6ee',
-      },
+      }
     }
   },
   computed: {
@@ -110,12 +118,15 @@ export default {
     wrapperStyles() {
       var styles = {
         position: !this.big ? (this.inline ? 'static' : 'absolute') : 'fixed',
-        left: this.calculateLeftPosition,
         right: this.alignRight
           ? this.triggerWrapperPosition.right - this.triggerPosition.right + this.offsetX + 'px'
           : '',
-        width: !this.big ? this.width + 'px' : this.big + '%',
+        width: !this.big ? this.width + 'px' : this.big,
         zIndex: this.inline ? '0' : '100',
+      }
+
+      if (this.calculateLeftPosition) {
+        styles.left = this.calculateLeftPosition
       }
 
       if (!this.big) {
@@ -143,7 +154,7 @@ export default {
         }
 
         if (this.big && !this.showFullscreen) {
-          styles.width = `${this.big}%`
+          styles.width = `${this.big}`
         }
 
         return styles
@@ -151,14 +162,26 @@ export default {
 
       return {}
     },
+    stylesSlot() {
+      if (this.height && !this.showFullscreen) {
+        return {
+          maxHeight: this.height + 'px',
+          height: this.height + 'px',
+          overflow: 'hidden',
+          overflowY: 'auto'
+        }
+      }
+
+      return {}
+    },
     calculateLeftPosition() {
       if (!this.alignRight && !this.big) {
         return this.triggerPosition.left - this.triggerWrapperPosition.left + this.offsetX + 'px'
-      } else if (this.big) {
-        return '0px'
+      } else if (this.big && !this.alignRight) {
+        return this.triggerPosition.left - this.triggerWrapperPosition.left + this.offsetX + 'px'
       }
 
-      return ''
+      return false
     },
     innerStyles() {
       return {
@@ -194,7 +217,7 @@ export default {
         const rightPosition =
           this.triggerElement.getBoundingClientRect().left +
           datepickerWrapper.getBoundingClientRect().width
-        this.alignRight = rightPosition > viewportWidth
+        this.alignRight = !this.alignRight ? (rightPosition > viewportWidth) : true
       })
     },
     toggleDatepicker() {
@@ -224,13 +247,13 @@ export default {
     closeDatepickerCancel() {
       if (this.showFilter) {
         this.$emit('cancelled', this.type)
-        this.closeDatepicker()
       }
     },
     handleClickOutside(event) {
-      if (event.target.id === this.triggerElementId || !this.showFilter || this.inline) {
+      if (event.target.id === this.triggerElementId || !this.showFilter || this.inline || event.target.id === "clear-filter") {
         return
       }
+
       this.closeDatepicker()
     },
     apply() {
@@ -280,6 +303,12 @@ export default {
     window.EventBus.$on('filter-opened', function (type) {
       if (type != this.type && this.showFilter) {
         this.closeDatepicker()
+      }
+    }.bind(this))
+
+    window.EventBus.$on('toggle-cancel-button', function (type, show) {
+      if (type == this.type && this.showCancelButton != show) {
+        this.showCancelButton = show
       }
     }.bind(this))
   }
@@ -559,14 +588,6 @@ $height-footer-header: 50px;
       &:hover {
         text-decoration: underline;
       }
-      &:nth-child(1) {
-        float: left;
-        left: 15px;
-      }
-      &:nth-child(2) {
-        float: right;
-        right: 15px;
-      }
     }
   }
 
@@ -602,7 +623,7 @@ $height-footer-header: 50px;
     z-index: 100;
     cursor: pointer;
     background: transparent;
-    border-radius: 150px;
+    border-radius: 150px !important;
     width: 35px;
     color: #aaa;
     font-weight: bold;

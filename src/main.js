@@ -13,4 +13,5 @@ const FilterSectionPlugin = {
 if (typeof window !== 'undefined' && window.Vue) {
   window.FilterSection = FilterSectionPlugin
 }
+
 export default FilterSectionPlugin
