@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>filters</title>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" name="lesmes" id="lesmes">
+      <filter-section
+        :trigger-element-id="'lesmes'"
+        :mobile-header="'Filtro'"
+        :fullscreen-mobile="true"
+        :offset-y="15"
+      >
+        <h4>epe</h4>
+      </filter-section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="./dist/build.js"></script>
+    <script>
+      Vue.use(window.App)
+
+      new Vue({
+        el: "#app"
+      })
+    </script>
+  </body>
+</html>
