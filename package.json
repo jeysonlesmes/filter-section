@@ -1,7 +1,7 @@
 {
   "name": "@jeysonlesmes/filter-section",
   "description": "Filters deployable and adapted for mobile with Vue",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Jeyson Lesmes <jeysonlesmes.1297@gmail.com>",
   "license": "MIT",
   "private": false,

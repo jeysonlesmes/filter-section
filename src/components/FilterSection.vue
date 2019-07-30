@@ -97,7 +97,7 @@ export default {
         keyboardShortcuts: 'Keyboard Shortcuts',
       },
       colors: {
-        selected: '#00a699',
+        selected: '#8dbf3c',
         inRange: '#66e2da',
         selectedText: '#fff',
         text: '#565a5c',
@@ -265,6 +265,10 @@ export default {
         const texts = copyObject(this.$options.texts)
         this.texts.apply = texts.apply || this.texts.apply
         this.texts.cancel = texts.cancel || this.texts.cancel
+      }
+      if (this.$options.colors) {
+        const colors = copyObject(this.$options.colors)
+        this.colors.selected = colors.selected || this.colors.selected
       }
     }
   },
