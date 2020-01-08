@@ -1,13 +1,14 @@
 {
   "name": "@jeysonlesmes/filter-section",
   "description": "Filters deployable and adapted for mobile with Vue",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "author": "Jeyson Lesmes <jeysonlesmes.1297@gmail.com>",
   "license": "MIT",
   "private": false,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "postbuild": "sudo cp -a dist/* /home/jeysonlesmes/apps/awake/sia/public/plugins/node_modules/@jeysonlesmes/filter-section/dist/"
   },
   "repository": {
     "url": "jeysonlesmes/filter-section",

@@ -23,21 +23,20 @@
       <div :style="stylesSlot">
         <slot></slot>
       </div>
-
-      <div class="filter-section__action-buttons" v-if="showActionButtons" :style="stylesFooter">
-        <div class="col-xs-6">
-          <button @click="closeDatepickerCancel" type="button" id="clear-filter" v-if="showCancelButton">{{ texts.cancel }}</button>
-        </div>
-        <div class="col-xs-6" style="padding-right: 0;">
-          <button
-            ref="apply-button"
-            @click="apply"
-            :style="{backgroundColor: colors.selected, color: '#fff', width: '150px', height: '30px', float: 'right'}"
-            type="button"
-          >{{ texts.apply }}</button>
-        </div>
-      </div>
     </div>
+    <div class="filter-section__action-buttons" v-if="showActionButtons" :style="stylesFooter">
+      <div class="col-xs-6">
+        <button @click="closeDatepickerCancel" type="button" id="clear-filter" v-if="showCancelButton">{{ texts.cancel }}</button>
+      </div>
+      <div class="col-xs-6" style="padding-right: 0;">
+        <button
+          ref="apply-button"
+          @click="apply"
+          :style="{backgroundColor: colors.selected, color: '#fff', width: '150px', height: '30px', float: 'right'}"
+          type="button"
+        >{{ texts.apply }}</button>
+      </div>
+  </div>
   </div>
 </template>
 
@@ -350,9 +349,10 @@ $height-footer-header: 50px;
 
     &--full-screen {
       position: fixed;
-      top: $height-footer-header;
+      top: 0;
+      padding-top: $height-footer-header;
       right: 0;
-      bottom: $height-footer-header;
+      bottom: 0;
       left: 0;
       border: none;
       z-index: 100;
@@ -363,6 +363,8 @@ $height-footer-header: 50px;
     position: relative;
     padding: 15px;
     padding-bottom: 0;
+    overflow: auto;
+    height: 100%;
   }
   &__datepicker-header {
     position: relative;
@@ -580,6 +582,7 @@ $height-footer-header: 50px;
     height: $height-footer-header;
     padding-top: 10px;
     margin-bottom: 12px;
+    padding: 15px;
     button {
       display: block;
       position: relative;
@@ -614,7 +617,7 @@ $height-footer-header: 50px;
   }
   &__mobile-only {
     display: none;
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       display: block;
     }
   }
